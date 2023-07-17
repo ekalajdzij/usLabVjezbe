@@ -1,0 +1,29 @@
+.equ N, 48
+////.equ N, 47
+.global _start
+.text
+_start:
+#F1
+mov R0, #0
+#F2
+mov R1, #1
+#sljedeci
+mov R3, #0
+#index
+mov R2, #0
+#Adresa
+mov R4, #0x5b0
+mov R5, #0
+for:
+CMP R2, #N
+BLT nextelement
+B end
+nextelement:
+STR R1, [R4, R5]
+add R3, R0, R1
+mov R0, R1
+mov R1, R3
+add R2, #1
+add R5, #4
+B for
+end:

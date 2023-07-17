@@ -1,0 +1,51 @@
+.data
+unos:
+.ascii "Unesite broj:\n"
+uneseno:
+.ascii " \n"
+ispisi:
+.ascii "......\n"
+.text
+.global _start
+_start:
+mov r7, #4 @standardno za unos
+mov r0, #1
+ldr r1, =unos
+mov r2, #14
+swi #0
+mov r7, #3
+mov r0, #0
+ldr r1, =uneseno
+mov r2, #7 @pretpostavljamo da se nece unijeti broj veci od 6 cifara
+swi #0
+ldr r3, addr_b @u r3 upisi adresu na koju je unesen string
+ldr r5, addr_ispisi @u r5 upisujemo adresu na koji ispisujemo string
+ldr r6, addr_b @u r6 se upisuje adresa koje ne smijemo premasiti prilikom unosa
+14
+add r6, r6, #7
+loop1:
+ldrb r4, [r3] @u r4 ucitavamo vrijednost bajta koji se nalazi na adresi r3
+cmp r4, #10 @poredimo vrijednost u r4 sa 10 (što u ASCII kodu označava novi red)
+beq kraj @brach equal, ako je r4 jednako 10, onda prekidamo unos
+cmp r4, #48 @također, provjeravamo da li se unesena vrijednost bajta u registru r4 nalazi
+blt kraj @između vrijednosti 48 i 57, što u ACSCII kodu prestavlja vrijednsoti za 0 i 9
+cmp r4, #57 @ako se vrijednost bajta u registru r4 ne nalazu u opsegu od 48 do 57, to znači da se
+bgt kraj @vise ne unosi broj, nego da je uneseno nešto sto nije broj, pa prekidamo unos
+strb r4, [r5] @ako smo dosli dovdje, to znaci da vrijednost u registru r4 jeste broj, pa je mozemo sacuvati na adresu na koju pokazuje r5
+add r5, r5, #1 @povecamo adresu na koju se upisuju bajtovi za 1
+add r3, r3, #1 @povecamo adresu sa koje uzimamo bajtove za 1
+cmp r3, r6 @poredimo vrijednosti r3 i r6, da ne bi izasli iz prethodno definisanog opsega
+blt loop1 @ako je r3 < r6, vracamo se na pocetak petlje i uzimamo sljedeci bajt
+beq kraj @ako je r3 = r6, unos je zavrsen
+kraj: @u slucaju da je zavrsen unos, radi sljedece
+mov r7, #4
+mov r0, #1
+ldr r1, =ispisi
+mov r2, #7
+swi #0
+15
+addr_b: .word uneseno
+addr_ispisi: .word ispisi
+mov r7, #1
+swi #0
+.end

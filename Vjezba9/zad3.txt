@@ -1,0 +1,35 @@
+.data
+isp1: .ascii "Unesi cijeli broj: "
+broj: .word 0
+isp2: .ascii "Uneseni cijeli broj je: "
+.text
+.global _start
+_start:
+@ write(1, isp1, 19)
+mov r7, #4
+mov r0, #1
+ldr r1, = isp1
+mov r2, #19
+swi #0
+@ read(1, broj, 4) - syscall za čitanje ulaza
+mov r7, #3
+mov r0, #0
+10
+ldr r1, = broj
+mov r2, #4
+swi #0
+@ write(1, isp2, 24)
+mov r7, #4
+mov r0, #1
+ldr r1, = isp2
+mov r2, #24
+swi #0
+@ write(1, broj, 10)
+mov r7, #4
+mov r0, #1
+ldr r1, =broj
+mov r2, #4
+swi #0
+mov r7, #1
+swi #0
+.end
