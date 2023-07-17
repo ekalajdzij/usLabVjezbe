@@ -1,0 +1,38 @@
+#include "mbed.h"
+#include "lpc1114etf.h"
+#define dp23 P0_0
+
+BusOut prikaz1 ( dp26 , dp25 , dp24 , dp23 );
+BusOut prikaz2 ( dp28 , dp6 , dp5 , dp27 );
+DigitalOut enable ( dp14 );
+InterruptIn taster(Taster_1);
+Ticker ticker;
+Timer debounce;
+
+const float T (2);
+int brojac1 (0);
+int brojac2 (0);
+
+void ispisiPrviBrojac() { 
+    brojac1 = (brojac1 + 1) % 16; prikaz1 = brojac1; 
+}
+
+void ispisiDrugiBrojac() {
+    if (debounce.read_ms() < 200) return;
+    else {
+        brojac2 = (brojac2 + 1) % 16;
+        prikaz2 = brojac2;
+        debounce.reset(); 
+    }
+}
+
+
+int main () {
+    enable = 0;
+    prikaz1 = brojac1;
+    prikaz2 = brojac2;
+    ticker.attach(&ispisiPrviBrojac, T);
+    taster.rise(&ispisiDrugiBrojac);
+    debounce.start();
+    while(1);
+} 
