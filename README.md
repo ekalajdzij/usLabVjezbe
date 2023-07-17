@@ -1,7 +1,5 @@
 # usLabVjezbe
 Ugradbeni sistemi 2022/23, laboratorijske vježbe
-# usLabVjezbe
-Ugradbeni sistemi 2022/23, laboratorijske vježbe
 
 # Tasks description
 Tasks done in the Embedded systems course, used on microcontrollers like:           
